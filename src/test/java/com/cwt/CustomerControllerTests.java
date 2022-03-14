@@ -301,8 +301,7 @@ public class CustomerControllerTests {
         		      .content(new ObjectMapper().writeValueAsString((new Customer(1, "John", "Doee", "", "QC"))))
         		      .contentType(MediaType.APPLICATION_JSON)
         		      .accept(MediaType.APPLICATION_JSON))
-        		      .andExpect(status().isBadRequest())
-        		      .andExpect(jsonPath("$.email", is("Email Should Not Be Blank")));	      
+        		      .andExpect(status().isBadRequest());      
         }
         
         @Test
