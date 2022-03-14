@@ -49,7 +49,6 @@ public class CustomerServiceImpl implements CustomerService {
 		return StreamSupport
                 .stream(customerRepo.findAll().spliterator(), false)
                 .collect(Collectors.toList());
-		//return customerRepo.findAll();
 	}
 
 	@Override
@@ -76,18 +75,6 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = findCustomerById(custId);
 		
 		customerRepo.deleteById(customer.getCustId());
-	}
-
-	@Override
-	public Customer updatePartially(Integer custId, Map<String, String> fields) {
-		Customer customer = findCustomerById(custId);
-		
-		fields.forEach((key, value) -> {
-			Field field = ReflectionUtils.findRequiredField(Customer.class, (String) key);
-			ReflectionUtils.setField(field, customer, value);
-		});
-		customerRepo.save(customer);
-		return customer;
 	}
 	
 }

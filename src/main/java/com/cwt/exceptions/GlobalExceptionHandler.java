@@ -18,24 +18,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(RuntimeException.class)
 	public ResponseEntity<String> exceptionHandler(RuntimeException ex){
-		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
-	
-	@SuppressWarnings("unlikely-arg-type")
-	@ExceptionHandler(TransactionSystemException.class)
-    protected ResponseEntity<?> handleConflict(TransactionSystemException ex) {
-
-		Map<Object, String> map = new HashMap<>();
-		Throwable cause = ex.getRootCause();
-	
-			if (!Objects.isNull(cause) && cause.equals(ConstraintViolationException.class)) {
-		           
-	        	((ConstraintViolationException) cause).getConstraintViolations()
-	        	.forEach(e -> map.put(e.getPropertyPath(), e.getMessage()));
-
-	        }
-
-        return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
-    } 
 	
 }

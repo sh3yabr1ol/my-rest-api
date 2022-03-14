@@ -79,11 +79,4 @@ public class CustomerController {
 		return new ResponseEntity<>(custId, HttpStatus.ACCEPTED);
 	}
 	
-	@PatchMapping("/updatePartial/{custId}")
-	public ResponseEntity<Object> updatePartially(@PathVariable Integer custId, 
-			@RequestBody Map<String, String> fields){
-			
-		Customer customer = customerService.updatePartially(custId, fields);
-		return new ResponseEntity<>(customer, HttpStatus.ACCEPTED);
-	}
 }

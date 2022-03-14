@@ -21,7 +21,7 @@ import com.cwt.persistence.CustomerRepo;
 @SpringBootTest
 @AutoConfigureTestEntityManager
 @Transactional
-public class CustomerRepositoryTests {
+class CustomerRepositoryTests {
 
 	@Autowired
     private TestEntityManager entityManager;
