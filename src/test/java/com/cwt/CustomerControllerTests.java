@@ -246,6 +246,5 @@ public class CustomerControllerTests {
         		      .andExpect(status().isBadRequest())
         		      .andExpect(jsonPath("$.email", is("Please input valid email format")));	      
         }
-    }
-    
+    }   
 }
