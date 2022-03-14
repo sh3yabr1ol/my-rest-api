@@ -210,8 +210,8 @@ public class CustomerControllerTests {
         }
         
         @Test
-        @DisplayName("Test for First Name Size Validation")
-        void createCustomer_failFirstName() throws Exception {
+        @DisplayName("Test for First Name Size Minimum Validation")
+        void createCustomer_failFirstNameMin() throws Exception {
 
         	mockMvc.perform(post("/customers/create")
         		      .content(new ObjectMapper().writeValueAsString((new Customer(1, "J", "Doee", "jd@g.com", "QC"))))
@@ -222,8 +222,31 @@ public class CustomerControllerTests {
         }
         
         @Test
-        @DisplayName("Test for Last Name Size Validation")
-        void createCustomer_failLastName() throws Exception {
+        @DisplayName("Test for First Name Size Max Validation")
+        void createCustomer_failFirstNameMax() throws Exception {
+
+        	mockMvc.perform(post("/customers/create")
+        		      .content(new ObjectMapper().writeValueAsString((new Customer(1, "Jqwertyuiopasdfghjklzxcvbnmqwerty", "Doee", "jd@g.com", "QC"))))
+        		      .contentType(MediaType.APPLICATION_JSON)
+        		      .accept(MediaType.APPLICATION_JSON))
+        		      .andExpect(status().isBadRequest())
+        		      .andExpect(jsonPath("$.firstName", is("First Name Size should be between 4 and 32 characters")));
+        }
+        
+        @Test
+        @DisplayName("Test for First Name Blank Validation")
+        void createCustomer_failFirstNameBlank() throws Exception {
+
+        	mockMvc.perform(post("/customers/create")
+        		      .content(new ObjectMapper().writeValueAsString((new Customer(1, "", "Doee", "jd@g.com", "QC"))))
+        		      .contentType(MediaType.APPLICATION_JSON)
+        		      .accept(MediaType.APPLICATION_JSON))
+        		      .andExpect(status().isBadRequest());
+        }
+        
+        @Test
+        @DisplayName("Test for Last Name Size Min Validation")
+        void createCustomer_failLastNameMin() throws Exception {
 
         	mockMvc.perform(post("/customers/create")
         		      .content(new ObjectMapper().writeValueAsString((new Customer(1, "John", "Doe", "jd@g.com", "QC"))))
@@ -232,6 +255,30 @@ public class CustomerControllerTests {
         		      .andExpect(status().isBadRequest())
         		      .andExpect(jsonPath("$.lastName", is("Last Name Size should be between 4 and 32 characters")));
         		      
+        }
+        
+        @Test
+        @DisplayName("Test for Last Name Size Max Validation")
+        void createCustomer_failLastNameMax() throws Exception {
+
+        	mockMvc.perform(post("/customers/create")
+        		      .content(new ObjectMapper().writeValueAsString((new Customer(1, "John", "Jqwertyuiopasdfghjklzxcvbnmqwerty", "jd@g.com", "QC"))))
+        		      .contentType(MediaType.APPLICATION_JSON)
+        		      .accept(MediaType.APPLICATION_JSON))
+        		      .andExpect(status().isBadRequest())
+        		      .andExpect(jsonPath("$.lastName", is("Last Name Size should be between 4 and 32 characters")));
+        		      
+        }
+        
+        @Test
+        @DisplayName("Test for Last Name Size Blank Validation")
+        void createCustomer_failLastNameBlank() throws Exception {
+
+        	mockMvc.perform(post("/customers/create")
+        		      .content(new ObjectMapper().writeValueAsString((new Customer(1, "John", "", "jd@g.com", "QC"))))
+        		      .contentType(MediaType.APPLICATION_JSON)
+        		      .accept(MediaType.APPLICATION_JSON))
+        		      .andExpect(status().isBadRequest());
         }
         
         @Test
@@ -244,6 +291,47 @@ public class CustomerControllerTests {
         		      .accept(MediaType.APPLICATION_JSON))
         		      .andExpect(status().isBadRequest())
         		      .andExpect(jsonPath("$.email", is("Please input valid email format")));	      
+        }
+        
+        @Test
+        @DisplayName("Test for Email Blank Validation")
+        void createCustomer_failEmailBlank() throws Exception {
+
+        	mockMvc.perform(post("/customers/create")
+        		      .content(new ObjectMapper().writeValueAsString((new Customer(1, "John", "Doee", "", "QC"))))
+        		      .contentType(MediaType.APPLICATION_JSON)
+        		      .accept(MediaType.APPLICATION_JSON))
+        		      .andExpect(status().isBadRequest())
+        		      .andExpect(jsonPath("$.email", is("Email Should Not Be Blank")));	      
+        }
+        
+        @Test
+        @DisplayName("Test for Location Blank Validation")
+        void createCustomer_failLocationBlank() throws Exception {
+
+        	mockMvc.perform(post("/customers/create")
+        		      .content(new ObjectMapper().writeValueAsString((new Customer(1, "John", "Doee", "jd@g.com", ""))))
+        		      .contentType(MediaType.APPLICATION_JSON)
+        		      .accept(MediaType.APPLICATION_JSON))
+        		      .andExpect(status().isBadRequest())
+        		      .andExpect(jsonPath("$.location", is("Location Should Not Be Blank")));	      
+        }
+        
+        @Test
+        @DisplayName("Test for Customer Update Validation")
+        void updateCustomer_failed() throws Exception {
+        	
+        	Customer toUpdateCustomer = new Customer(1, "J", "Doe2", "jd2@g.com", "QC");
+    	
+            Mockito.when(customerService.updateCustomerRecord(customer.getCustId(), toUpdateCustomer)).thenReturn(toUpdateCustomer);
+            
+        	mockMvc.perform(put("/customers/update/{custId}", customer.getCustId())
+        			  .with(httpBasic("admin", "admin"))
+        		      .content(new ObjectMapper().writeValueAsString(toUpdateCustomer))
+        		      .contentType(MediaType.APPLICATION_JSON)
+        		      .accept(MediaType.APPLICATION_JSON))
+        		      .andExpect(status().isBadRequest())
+        		      .andExpect(jsonPath("$.firstName", is("First Name Size should be between 4 and 32 characters")));        
         }
     }   
 }
